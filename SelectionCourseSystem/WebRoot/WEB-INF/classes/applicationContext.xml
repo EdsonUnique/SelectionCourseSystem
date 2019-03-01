@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+	xmlns:context="http://www.springframework.org/schema/context"
+
+	xmlns:aop="http://www.springframework.org/schema/aop"
+
+	xmlns:tx="http://www.springframework.org/schema/tx"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+
+	http://www.springframework.org/schema/context
+
+	http://www.springframework.org/schema/context/spring-context.xsd
+
+	http://www.springframework.org/schema/aop
+
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+
+	http://www.springframework.org/schema/tx 
+
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+                           
+    <context:property-placeholder location="classpath:database.properties"/>
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+
+		<property name="driverClass" value="${jdbc.driver}"></property>
+
+		<property name="user" value="${jdbc.username}"></property>
+
+		<property name="password" value="${jdbc.password}"></property>
+
+		<property name="jdbcUrl" value="${jdbc.url}"></property>
+
+	</bean>
+
+	
+
+	<!-- Spring整合Hibernate核心配置文件 -->
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+
+		<property name="dataSource" ref="dataSource"/>
+
+		<!-- Hibernate信息 -->
+
+		<property name="hibernateProperties">
+
+			<props>
+
+				<prop key="hibernate.show_sql">true</prop>
+
+				<prop key="hibernate.format_sql">true</prop>
+
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+
+				<!-- 创建数据库表 -->
+
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+
+			</props>
+
+		</property>
+
+		<!-- 配置映射文件 -->
+
+		 <property name="mappingResources">
+
+		 	<list>
+		 		<value>edson/bean/Admin.hbm.xml</value>
+		 		<value>edson/bean/Student.hbm.xml</value>
+		 		<value>edson/bean/Teacher.hbm.xml</value>
+		 		<value>edson/bean/Course.hbm.xml</value>
+		 	</list>
+
+		 </property>
+
+	</bean>
+
+	
+
+	<!-- 开启事务管理 -->
+
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager" >
+
+		<!-- 注入 sessionFactory-->
+
+		<property name="sessionFactory" ref="sessionFactory"/>
+
+	</bean>
+
+	
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<aop:config proxy-target-class="true"></aop:config><!-- 代理类型无法转换问题解决 -->
+                           
+                           
+    <!-- 配置service 
+        <bean> 配置需要创建的对象
+            id ：用于之后从spring容器获得实例时使用的
+            class ：需要创建实例的全限定类名
+    -->
+    
+	
+	<!-- 管理员页面 -->
+	<bean id="adminAction" class="edson.web.AdminAction"  scope="prototype">
+		<property name="adminService" ref="adminService"/>
+	</bean>
+	<bean id="adminService" class="edson.business.serviceImpl.AdminService"  >
+		<property name="adminDao" ref="adminDao"/>
+	</bean>
+	<bean id="adminDao" class="edson.database.daoImpl.AdminDao" >
+		<!-- 注册HibernateTemplate -->
+		<property name="sessionFactory" ref="sessionFactory" ></property>
+	</bean>
+	<bean id="adminTeaAction" class="edson.web.AdminTeaAction"  scope="prototype">
+		<property name="adminService" ref="adminService"/>
+	</bean>
+	<bean id="adminCourseAction" class="edson.web.AdminCourseAction"  scope="prototype">
+		<property name="adminService" ref="adminService"/>
+	</bean>
+	<bean id="adminSelectionAction" class="edson.web.AdminSelectionAction"  scope="prototype">
+		<property name="adminService" ref="adminService"/>
+	</bean>
+	
+	<!-- 学生页面 -->
+	<bean id="stuAction" class="edson.web.StuAction"  scope="prototype">
+		<property name="stuService" ref="stuService"/>
+	</bean>
+	<bean id="stuService" class="edson.business.serviceImpl.StuService"  >
+		<property name="stuDao" ref="stuDao"/>
+	</bean>
+	<bean id="stuDao" class="edson.database.daoImpl.StuDao" >
+		<!-- 注册HibernateTemplate -->
+		<property name="sessionFactory" ref="sessionFactory" ></property>
+	</bean>
+	
+	<!-- 教师页面 -->
+	<bean id="teaAction" class="edson.web.TeaAction"  scope="prototype">
+		<property name="teaService" ref="teaService"/>
+	</bean>
+	<bean id="teaService" class="edson.business.serviceImpl.TeaService"  >
+		<property name="teaDao" ref="teaDao"/>
+	</bean>
+	<bean id="teaDao" class="edson.database.daoImpl.TeaDao" >
+		<!-- 注册HibernateTemplate -->
+		<property name="sessionFactory" ref="sessionFactory" ></property>
+	</bean>
+</beans>

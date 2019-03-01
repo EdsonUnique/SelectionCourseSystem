@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+   
+<struts>
+
+   <constant name="struts.devMode" value="true" />
+   <package name="base_package" extends="struts-default">
+        <interceptors>
+            <!-- 配置权限拦截器 -->
+            <interceptor name="permission" class="edson.utils.MyInterceptor"> 
+            	<param name="includeMethods">viewAllSelection,selectCourse,deleteSelection</param>
+            </interceptor>
+            <interceptor name="pass" class="edson.utils.CheckSessionInterceptor">
+            	<param name="excludeMethods">login</param>
+            </interceptor> 
+            	
+
+            <!-- 定义拦截器栈 -->
+            <interceptor-stack name="permissionStack">
+              <interceptor-ref name="permission" />
+              <interceptor-ref name="pass"/>
+                <interceptor-ref name="defaultStack" />
+                
+            </interceptor-stack>
+        </interceptors>
+        <!-- 定义默认拦截器 -->
+        <default-interceptor-ref name="permissionStack"></default-interceptor-ref>
+         <global-results>
+			<result name="no_start">/jsp/error/message.jsp</result>
+			<result name="wrong">/jsp/error/wrong.jsp</result>
+		</global-results>
+    </package>
+    
+   <package name="admin" namespace="/" extends="base_package" >
+     
+      <action name="admin_*" 
+            class="edson.web.AdminAction" 
+             method="{1}">
+             <!-- 首页 -->
+            <result name="success_admin">/jsp/admin/main.jsp</result>
+             <result name="success_tea">/jsp/teacher/main.jsp</result>
+              <result name="success_stu">/jsp/student/main.jsp</result>
+              <result name="login_index" >/index.jsp </result>
+              <result name="success_loginOut">/index.jsp</result>
+              <result name="success_updatePwdUI" >/jsp/admin/updatePwd.jsp</result>
+              
+              <result name="error">/jsp/error/error.jsp</result>
+              <!-- 学生 -->
+              <result name="success_findPageStudent">/jsp/admin/stu_search.jsp</result>
+               <result name="success_addStudent" >/jsp/admin/stu_add.jsp</result>
+              <result name="success_updateStudent" type="redirectAction">
+              	<param name="actionName">admin_findPageStudent</param>
+				<param name="namespace">/</param>
+              </result>
+              
+             
+              
+             <allowed-methods>
+				login,addStudent,findPageStudent,searchStuById,searchStuByName,updateStudent,updateStudentUI,
+				deleteStudent,loginOut,updatePwdUI,updatePwd
+			</allowed-methods>
+      </action>
+      
+      <action name="adminTea_*" 
+            class="edson.web.AdminTeaAction" 
+             method="{1}">
+             
+              <!-- 教师 -->
+                <result name="success_addTeacher" >/jsp/admin/tea_add.jsp</result>
+              <result name="success_findPageTeacher">/jsp/admin/tea_search.jsp</result>
+              <result name="success_updateTeacher" type="redirectAction">
+              	<param name="actionName">adminTea_findPageTeacher</param>
+				<param name="namespace">/</param>
+              </result>
+              <result name="error">/jsp/error/error.jsp</result>
+              
+               <allowed-methods>
+				deleteTeacher,addTeacher,findPageTeacher,searchTeaById,searchTeaByName,updateTeacher,updateTeacherUI,
+			</allowed-methods>
+             
+      </action>
+      
+       <action name="adminCourse_*" 
+            class="edson.web.AdminCourseAction" 
+             method="{1}">
+             
+              <!-- 课程 -->
+                <result name="success_addCourse" >/jsp/admin/course_add.jsp</result>
+              <result name="success_findPageCourse">/jsp/admin/course_search.jsp</result>
+              <result name="success_updateCourse" type="redirectAction">
+              	<param name="actionName">adminCourse_findPageCourse</param>
+				<param name="namespace">/</param>
+              </result>
+              <result name="error">/jsp/error/error.jsp</result>
+              
+               <allowed-methods>
+				deleteCourse,addCourse,addCourseUI,findPageCourse,searchCourseById,searchCourseByName,updateCourse,updateCourseUI,
+			</allowed-methods>
+             
+      </action>
+      
+         <action name="adminSelection_*" 
+            class="edson.web.AdminSelectionAction" 
+             method="{1}">
+             
+              <!-- 选课 -->
+                <result name="success_findAllCourse" >/jsp/admin/selection_add.jsp</result>
+              <result name="success_search" type="redirectAction">
+              	<param name="actionName">adminSelection_findAllCourse</param>
+				<param name="namespace">/</param>
+              </result>
+              <result name="success_findAllSelection" >/jsp/admin/selection_decide.jsp</result>
+              <result name="success_viewAllSelection">/jsp/admin/selection_search.jsp</result>
+                
+              <result name="error">/jsp/error/error.jsp</result>
+             
+               <result name="success_startCheck" type="redirectAction">
+              	<param name="actionName">adminSelection_findAllSelection</param>
+				<param name="namespace">/</param>
+              </result>
+                <result name="success_confirmSelection" type="redirectAction">
+              	<param name="actionName">adminSelection_viewAllSelection</param>
+				<param name="namespace">/</param>
+              </result>
+              
+               <allowed-methods>
+               addSelection,findAllCourse,deleteSelection,searchBySelectionName
+               ,searchBySelectionId,findAllSelection,startCheck,endSelection,viewAllSelection,confirmSelection
+               ,cancelConfirmSelection
+			
+			</allowed-methods>
+             
+      </action>
+       <action name="stu_*" 
+            class="edson.web.StuAction" 
+             method="{1}">
+             
+              <!-- 学生管理 -->
+                <result name="success_viewAllSelection" >/jsp/student/stu_selection.jsp</result>
+              <result name="success_selectCourse" type="redirectAction">
+              	<param name="actionName">stu_viewAllSelection</param>
+				<param name="namespace">/</param>
+              </result>
+               <result name="success_deleteSelection" type="redirectAction">
+              	<param name="actionName">stu_viewMySelection</param>
+				<param name="namespace">/</param>
+              </result>
+              <result name="success_viewMySelection">/jsp/student/stu_course.jsp</result>
+              <result name="error">/jsp/error/error.jsp</result>
+              <result name="success_loginOut">/index.jsp</result>
+              <result name="success_updatePwdUI">/jsp/student/updatePwd.jsp</result>
+              <result name="success_searchCourseByTeaName">/jsp/student/stu_selection.jsp</result>
+              <result name="success_searchCourseByCourseName">/jsp/student/stu_selection.jsp</result>
+               <allowed-methods>
+				viewAllSelection,selectCourse,searchCourseByTeaName,searchCourseByCourseName,viewMySelection,deleteSelection,loginOut,updatePwd,updatePwdUI
+			</allowed-methods>
+             
+      </action>
+      
+            <action name="tea_*" 
+            class="edson.web.TeaAction" 
+             method="{1}">
+             
+              <!-- 教师管理 -->
+               <result name="success_viewMyCourse" >/jsp/teacher/mycourse.jsp</result>
+              <result name="success_viewMySelection">/jsp/teacher/myselection.jsp</result>
+              <result name="error">/jsp/error/error.jsp</result>
+              <result name="success_viewTheStu">/jsp/teacher/stu_select_search.jsp</result>
+              <result name="success_logOut">/index.jsp</result>
+              <result name="success_updatePwdUI">/jsp/teacher/updatePwd.jsp</result>
+               <allowed-methods>
+				viewMyCourse,viewMySelection,logOut,updatePwd,updatePwdUI,viewTheStu
+			</allowed-methods>
+             
+      </action>
+      
+      
+   </package>
+
+   
+</struts>

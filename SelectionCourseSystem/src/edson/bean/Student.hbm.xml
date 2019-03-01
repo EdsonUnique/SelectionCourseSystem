@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping 
+	PUBLIC 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"	
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	<!--  实体的映射文件      把实体类的属性和表中的字段映射在一起 -->
+	<hibernate-mapping package="edson.bean"> 	
+		<class name="edson.bean.Student" table="stu_tbl">		
+			<!-- 配置主键 -->		
+			<id name="stu_id"   >
+				<generator class="assigned"></generator>
+			</id>		
+			<property name="stu_name"  />	
+			<property name="stu_gender"/>	
+			<property name="stu_birth"/>
+			<property name="stu_pwd" />	
+			
+		<set name="courses" table="s_c_tbl" inverse="false" cascade="save-update" lazy="false">
+            <!--3.2 key的 column表示当前类在中间表中的外键 -->
+            <key column="stu_id" />
+                 <!--3.3 many-to-many表示多对多关系
+                     column:表示另一方在中间表中的外键
+                     class:表示另一方类的全限定名
+               -->
+             <many-to-many column="course_id" class="edson.bean.Course" lazy="false"></many-to-many>
+        </set>
+					
+		</class>
+	</hibernate-mapping>
+
+
+

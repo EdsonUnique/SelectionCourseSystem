@@ -1,0 +1,349 @@
+<script type="text/javascript" src="jsp/js/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript">
+        /* 提交结果，执行ajax */
+        function btn(){
+       var $btn = $("input.btn");//获取按钮元素
+            //给按钮绑定点击事件
+            $btn.bind("click",function(){
+                $.ajax({
+                    type:"post",
+                    url:"excuteAjaxJsonAction",//需要用来处理ajax请求的action,excuteAjax为处理的方法名，JsonAction为action名
+                    data:{//设置数据源
+                        name:$("input[name=name]").val(),
+                        age:$("input[name=age]").val(),
+                        position:$("input[name=position]").val()//这里不要加","  不然会报错，而且根本不会提示错误地方
+                    },
+                    dataType:"json",//设置需要返回的数据类型
+                    success:function(data){
+                        var d = eval("("+data+")");//将数据转换成json类型，可以把data用alert()输出出来看看到底是什么样的结构
+                        //得到的d是一个形如{"key":"value","key1":"value1"}的数据类型，然后取值出来                   
+                        $("#s_name").text(""+d.name+"");
+                        $("#s_age").text(""+d.age+"");
+                        $("#s_position").text(""+d.position+"");
+                         
+                    },
+                    error:function(){
+                        alert("系统异常，请稍后重试！");
+                    }//这里不要加","
+                });
+            });
+        }
+
+        /* 页面加载完成，绑定事件 */
+        $(document).ready(function(){          
+            btn();//点击提交，执行ajax
+        });
+
+    </script>
+    
+   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   
+   
+   struts.xml
+   <?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 基础包 -->
+	<package name="base" extends="struts-default">
+		<!-- 自定义拦截器 -->
+		 <interceptors>
+			<interceptor name="characterEncodeingFilter" class="edson.web.shop.utils.CharacterEncodingFilter"></interceptor>
+			<interceptor-stack name="myStatck">
+				<interceptor-ref name="defaultStack"/>
+				<interceptor-ref name="characterEncodeingFilter"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 指定在哪使用 -->
+		<default-interceptor-ref name="myStatck"></default-interceptor-ref>	
+		<global-results>
+			<result name="success_message">/WEB-INF/jsp/message.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping result="success_message" exception="java.lang.Exception"></exception-mapping>
+		</global-exception-mappings>
+	</package>
+	
+	<!-- 前台首页模块 -->
+	<package name="shopIndex" namespace="/shopIndex" extends="base">
+		<action name="shopIndex_*" class="indexAction" method="{1}">
+			<result name="indexSuccess">/WEB-INF/jsp/index.jsp</result>
+			<allowed-methods>showIndex</allowed-methods>
+		</action>
+	</package>
+	
+	<!-- 用户模块 -->
+	<package name="user" namespace="/user" extends="base">
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="success_registerUI">/WEB-INF/jsp/register.jsp</result>
+			<result name="success_loginUI">/WEB-INF/jsp/login.jsp</result>
+			<result name="success_logout" type="redirectAction">
+				<param name="actionName">shopIndex_showIndex</param>
+				<param name="namespace">/shopIndex</param>
+			</result>
+			<result name="input_register">/WEB-INF/jsp/register.jsp</result>
+			<result name="input_login">/WEB-INF/jsp/login.jsp</result>
+			<!-- 重定向到另一个包中的action -->
+			<result name="success_login" type="redirectAction">
+				<param name="actionName">shopIndex_showIndex</param>
+				<param name="namespace">/shopIndex</param>
+			</result>
+			<allowed-methods>
+				registerUI,loginUI,register,login,logout,
+				activateAccount,generateCheckImage,checkUsername
+			</allowed-methods>
+		</action>
+	</package>
+
+	<!-- 分类模块 -->
+	<package name="category" namespace="/category" extends="base">
+		<action name="categorysecond_*" class="categorysecondAction" method="{1}">
+			<result name="success_searchSecondCategory">/WEB-INF/jsp/secondCategory.jsp</result>
+			<result name="success_searchDetailSecondCategory">/WEB-INF/jsp/secondCategory.jsp</result>
+			<result name="success_viewAllCategorySecond">/WEB-INF/admin/categorysecond/list.jsp</result>
+			<result name="success_addCategorySecondUI">/WEB-INF/admin/categorysecond/add.jsp</result>
+			<result name="success_addCategorySecond" type="redirectAction">categorysecond_viewAllCategorySecond</result>
+			<result name="success_updateCategorySecond" type="redirectAction">categorysecond_viewAllCategorySecond</result>
+			<result name="success_updateCategorySecondUI">/WEB-INF/admin/categorysecond/add.jsp</result>
+			<result name="success_deleteCategorySecond" type="redirectAction">categorysecond_viewAllCategorySecond</result>
+			<allowed-methods>searchSecondCategory,searchDetailSecondCategory,viewAllCategorySecond,
+							addCategorySecondUI,addCategorySecond,updateCategorySecondUI,updateCategorySecond,deleteCategorySecond
+			</allowed-methods>
+		</action>
+		
+		<action name="category_*" class="categoryAction" method="{1}">
+			<result name="success_viewAllCategory" type="chain">
+				<param name="actionName">admin_adminCategoryList</param>
+				<param name="namespace">/admin</param>
+			</result>
+			<result name="success_addCategory" type="redirectAction">category_viewAllCategory</result>
+			<result name="success_addCategoryUI">/WEB-INF/admin/category/add.jsp</result>
+			<result name="success_updateCategoryUI">/WEB-INF/admin/category/add.jsp</result>
+			<result name="success_updateCategory" type="redirectAction">category_viewAllCategory</result>
+			<result name="success_deleteCategory" type="redirectAction">category_viewAllCategory</result>
+			<allowed-methods>viewAllCategory,addCategory,addCategoryUI,updateCategory,updateCategoryUI,deleteCategory</allowed-methods>
+		</action>
+	
+	</package>
+	
+	<!-- 商品模块 -->
+	<package name="product" namespace="/product" extends="base">
+		<action name="product_*" class="productAction" method="{1}">
+			<result name="success_showDetail">/WEB-INF/jsp/detailProduct.jsp</result>
+			<result name="success_viewAllProduct">/WEB-INF/admin/product/list.jsp</result>
+			<result name="success_updateProductUI">/WEB-INF/admin/product/add.jsp</result>
+			<result name="success_updateProduct" type="redirect">product_viewAllProduct</result>
+			<result name="success_addProductUI">/WEB-INF/admin/product/add.jsp</result>
+			<result name="success_addProduct" type="redirect">product_viewAllProduct</result>
+			<result name="success_deleteProduct" type="redirect">product_viewAllProduct</result>
+			<allowed-methods>showDetail,viewAllProduct,updateProductUI
+			,updateProduct,addProductUI,addProduct,deleteProduct</allowed-methods>
+		</action>
+	
+	</package>
+	
+	<!-- 购物车模块 -->
+	<package name="cart" namespace="/cart" extends="base">
+		<action name="cart_*" class="cartAction" method="{1}">
+			<result name="success_addCart">/WEB-INF/jsp/cart.jsp</result>
+			<result name="success_operateCart">/WEB-INF/jsp/cart.jsp</result>
+			<result name="success_cartUI">/WEB-INF/jsp/cart.jsp</result>
+			<allowed-methods>addCart,operateCart,cartUI</allowed-methods>
+		</action>
+	
+	</package>
+	
+	<!-- 订单模块 -->
+	<package name="order" namespace="/order" extends="base">
+		<action name="order_*" class="orderAction" method="{1}">
+			<result name="success_saveOrder">/WEB-INF/jsp/order.jsp</result>
+			<result name="success_loginUI">/WEB-INF/jsp/login.jsp</result>
+			<result name="success_showOrders">/WEB-INF/jsp/myorders.jsp</result>
+			<result name="success_viewAllOrders">/WEB-INF/admin/order/list.jsp</result>
+			<result name="success_viewOrderItem">/WEB-INF/admin/order/viewOrderItem.jsp</result>
+			<result name="success_updateOrderUI">/WEB-INF/admin/order/update.jsp</result>
+			<result name="success_updateOrder" type="redirectAction">order_viewAllOrders</result>
+			<result name="success_deleteOrder" type="redirectAction">order_viewAllOrders</result>
+			<result name="success_repayOrder">/WEB-INF/jsp/order.jsp</result>
+			<allowed-methods>saveOrder,showOrders,payOrder,callBack,viewAllOrders
+							,viewOrderItem,updateOrder,updateOrderUI,deleteOrder,repayOrder
+			</allowed-methods>
+		</action>
+	
+	</package>
+	
+	<!-- 后台访问页面 -->
+	<package name="admin" namespace="/admin" extends="base">
+		<action name="admin_*" class="adminAction" method="{1}">
+			<result name="success_adminBottom">/WEB-INF/admin/bottom.jsp</result>
+			<result name="success_adminTop">/WEB-INF/admin/top.jsp</result>
+			<result name="success_adminLeft">/WEB-INF/admin/left.jsp</result>
+			<result name="success_adminWelcome">/WEB-INF/admin/welcome.jsp</result>
+			<result name="success_adminHome">/WEB-INF/admin/home.jsp</result>
+			<result name="success_adminUserList">/WEB-INF/admin/user/list.jsp</result>
+			<result name="success_adminCategoryList">/WEB-INF/admin/category/list.jsp</result>
+			<allowed-methods>adminHome,adminBottom,adminTop,adminLeft,adminWelcome,adminUserList,adminCategoryList</allowed-methods>
+		</action>
+		
+		<action name="/user_*" class="adminUserAction" method="{1}">
+			<!-- 重定向action在同一包下 -->
+			<result name="success_adminLogin" type="redirectAction">admin_adminHome</result>
+			<result name="success_listAdminUser" type="chain">admin_adminUserList</result>
+			<result name="login_input">/admin_login.jsp</result>
+			<result name="success_addAdminUser" type="redirectAction">user_listAdminUser</result>
+			<result name="success_addAdminUserUI">/WEB-INF/admin/user/add.jsp</result>
+			<result name="success_deleteAdminUser" type="redirectAction">user_listAdminUser</result>
+			<result name="success_updateAdminUserUI">/WEB-INF/admin/user/add.jsp</result>
+			<result name="success_updateAdminUser" type="redirectAction">user_listAdminUser</result>
+			
+			<allowed-methods>adminLogin,listAdminUser,addAdminUserUI,addAdminUser,deleteAdminUser,updateAdminUserUI,updateAdminUser</allowed-methods>
+		</action>
+	</package>
+</struts>
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+actionerror用js显示
+//actionerror 
+<s:if test="hasActionErrors()"> 
+<s:iterator value="actionErrors"> 
+<script language="JavaScript"> 
+alert("<s:property escape="false"/>") 
+</script> 
+</s:iterator> 
+</s:if> 
+//actionmessage 
+<s:if test="hasActionMessages()"> 
+<s:iterator value="actionMessages"> 
+<script language="JavaScript"> 
+alert("<s:property escape="false"/>") 
+</script> 
+</s:iterator> 
+</s:if> 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$(function(){     
+            /*JQuery 限制文本框只能输入数字*/  
+            $(".NumText").keyup(function(){    
+                    $(this).val($(this).val().replace(/D|^0/g,''));  
+                }).bind("paste",function(){  //CTR+V事件处理    
+                    $(this).val($(this).val().replace(/D|^0/g,''));     
+                }).css("ime-mode", "disabled"); //CSS设置输入法不可用 
+ 
+/*JQuery 限制文本框只能输入数字和小数点*/  
+            $(".NumDecText").keyup(function(){    
+                    $(this).val($(this).val().replace(/[^0-9.]/g,''));    
+                }).bind("paste",function(){  //CTR+V事件处理    
+                    $(this).val($(this).val().replace(/[^0-9.]/g,''));     
+                }).css("ime-mode", "disabled"); //CSS设置输入法不可用    
+        }); 
+
+//+++++++++++++++++++++++++++++++++++++++++++++Hibernate的hbm设计
+cascade和inverse (Employee – Department)
+l  Casade用来说明当对主对象进行某种操作时是否对其关联的从对象也作类似的操作，常用的cascade:
+         none,all,save-update,delete, lock,refresh,evict,replicate,persist,
+         merge,delete-orphan(one-to-many)。一般对many-to-one,many-to-many不设置级联，在<one-to-one>和<one-to-many>中设置级联。
+l  inverse表“是否放弃维护关联关系”(在Java里两个对象产生关联时，对数据库表的影响)，在one-to-many和many-to-many的集合定义中使用，inverse=”true”表示该对象不维护关联关系；该属性的值一般在使用有序集合时设置成false（注意hibernate的缺省值是false）。
+         one-to-many维护关联关系就是更新外键。many-to-many维护关联关系就是在中间表增减记录。
+         注: 配置成one-to-one的对象不维护关联关系
+
+二，属性的解析
+class元素的lazy属性设定为true，表示延迟加载，如果lazy设为false，则
+表示立即加载。以下对这二点进行说明。
+     立即加载：表示Hibernate在从数据库中取得数据组装好一个对象(如学生1)后，
+            会立即再从数据库取得数据组装此对象所关联的对象(如学生证1)。
+     延迟加载：表示Hibernate在从数据库中取得数据组装好一个对象(如学生1)后，
+            不会立即再从数据库中取得数据组装此对象所关联的对象(如学生1)，
+            而是等到需要时，才会从数据库取得数据组装此关联对象。
+<one-to-one>元素的cascade属性表明操作是否从父对象级联到被关联的对象，     它
+的取得可以是以下几种：
+     none：在保存，删除或修改当前对象时，不对其附属对象（关联对象）进行级联
+          操作。它是默认值。
+     save-update：在保存，更新当前对象时，级联保存，更新附属对象(临时对象，
+          游离对象)。
+     delete：在删除当前对象时，级联删除附属对象。
+     all：所有情况下均进行级联操作，即包含save-update和delete操作。
+     delete-orphan：删除和当前对象解除关系的附属对象。
+<one-to-one>元素的fetch属性的可选值是join和select，默认是select。
+当fetch属性设定为join时，表示连接抓取(Join fetching)：Hibernate通过
+在Select语句中使用outer join(外连接)来获得对象的关联实例或者关联集合。
+当fetch属性设定为select时，表示查询抓取(Select fetching)：需要另外发
+送一条Select语句抓取当前对象的关联实体或集合。
+三。代码练习
+<set name="emps" cascade="save-update"> <key column="depart_id"/>  <one-to-many class="Employee"/></set>
+<set name="students" table="taacher_student" inverse="true"><!-- table是用来指定中间表的属性 --><key column="teacher_id"></key><!-- 查找教师id时，链接中间表表的teacher_id --><many-to-many class="Student" column="student_id"></many-to-many></set>
+
+//+++++++++++++++++++++++++++++++++++++MD5加密算法
+import java.security.MessageDigest;
+public static String getMD5(String str) {
+ try {
+ // 生成一个MD5加密计算摘要
+ MessageDigest md = MessageDigest.getInstance("MD5");
+ // 计算md5函数
+ md.update(str.getBytes());
+ // digest()最后确定返回md5 hash值，返回值为8为字符串。因为md5 hash值是16位的hex值，实际上就是8位的字符
+ // BigInteger函数则将8位的字符串转换成16位hex值，用字符串来表示；得到字符串形式的hash值
+ return new BigInteger(1, md.digest()).toString(16);
+ } catch (Exception e) {
+ throw new SpeedException("MD5加密出现错误");
+ }
+}
+
+
+//++++++++++++++++++++++离线查询
+DetachedCriteria criteria=DetachedCriteria.forClass(Product.class);
+criteria.add(Restrictions.eq("is_hot", "1"));
+List<Product> products=this.getHibernateTemplate().findByCriteria(criteria, 0, 10);
+
+
+
+//++++++++++++++++++++++++++++++++++++字符串转时间
+String time="2010-11-20 11:10:10"; 
+  
+ Date date=null; 
+  SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+  date=formatter.parse(time); 
+  
+  //++++++++Long型转时间
+  Date date=new Date(Long.parseLong(time)); 
+  SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+  time=formatter.format(date); 
+
+//+++++拦截器
+  <!-- 需要拦截的方法 -->
+                <!-- execludeMethods：该参数指定拦截器拒绝拦截的方法列表，多个方法用“，”隔开（支持通配符*，例如add*，表示所有以add开头的方法），
+                 如果指定了这个参数拦截器不会拦截指定列表中的方法，就是所谓的黑名单 
+                    includeMethods： 该参数指定拦截器需要拦截的方法列表，多个方法用“，”隔开（支持通配符*，例如add*，表示所有以add开头的方法），
+                 如果指定了参数，则指定的Action在执行前会被拦截，即白名单。
+                 
+                 Struts2拦截器属性excludeMethods、includeMethods配置无效的原因:
+拦截器如果通过实现Interceptor接口生成的话，属性excludeMethods、includeMethods配置无效。拦截器如果通过继承MethodFilterInterceptor类的话，属性excludeMethods、includeMethods配置有效。
+                  -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   

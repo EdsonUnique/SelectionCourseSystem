@@ -1,0 +1,118 @@
+html,body,div,span,iframe,h1,h2,h3,a{
+	margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;
+}
+
+
+ol,ul{
+	list-style:none;margin:0;padding:0;
+}
+
+.bg{
+				text-align: center;
+				background-image: url(../images/bg2.jpg);
+				background-repeat:no-repeat;
+				background-position: center center;
+				background-size: cover;
+				background-attachment: fixed; 
+				
+			}
+
+div.main{
+
+	width: 100%;
+	height: 100%;
+	margin:0 auto;
+
+
+}
+
+div.intro{
+	width: 100%;
+	height: 15%;
+	
+}
+
+div.character_bg{
+	width: 500px;
+	height: 50px;
+	font-size:30px;
+	float: left;
+	margin-top: 20px; 
+	margin-left: 10px; 
+	background-image: url(../images/character_bg.jpg);
+	background-repeat:no-repeat;
+	background-position: center center;
+	background-size: cover;
+	background-attachment: fixed; 
+	opacity: 0.2;
+	z-index: 1
+
+	
+}
+
+div.character{
+	
+	font-size:30px;
+	float: left;
+	margin-top: 20px; 
+	margin-left: 40px; 
+	position: absolute;
+	z-index: 2
+}
+
+div.login_form{
+
+	width: 600px;
+	height: 60%;
+	z-index: 1;
+}
+
+div.bottom{/*底色*/
+	background-color: white;
+	width: 600px;
+	height: 300px;
+
+	opacity: 0.3;
+	position: absolute;
+	z-index: 2;
+	border-bottom: 7px groove;
+	border-top: 7px groove;
+	border-right: 7px groove;
+	border-left: 7px groove;
+
+	
+}
+
+div.login_table{
+
+	
+	width: 600px;
+	height: 300px;
+	
+	position: fixed;
+	z-index: 8;
+	
+
+	
+}
+
+div.login_table table,tr,td{
+
+	
+	padding-top: 20px;
+	text-align: center;
+
+
+}
+
+
+div.footer{
+	width: 100%;
+	height: 15%;
+	
+}
+
+/*首页登录*/
+/*******************************************************************************************************************/
+
+

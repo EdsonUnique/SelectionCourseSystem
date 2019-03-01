@@ -1,0 +1,290 @@
+html,body,div,span,iframe,h1,h2,h3,a{
+	margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;
+}
+
+
+/*管理员页面*/
+div.header{
+	width:100%;
+	height: 15%;
+	background-image: url("../images/images/admin_01.jpg");
+	background-repeat: no-repeat;
+
+}
+
+div.login_user{
+	font-weight: bold;
+	font-variant: 1px;
+	margin-right: 40px;
+	margin-top: 70px;
+	float: right;
+	z-index: 2;
+	
+}
+
+div.character_bg{
+	width: 500px;
+	height: 50px;
+	font-size:30px;
+	float: left;
+	margin-top: 20px; 
+	margin-left: 10px; 
+	background-image: url(../images/character_bg2.jpg);
+	background-repeat:no-repeat;
+	background-position: center center;
+	background-size: cover;
+	background-attachment: fixed; 
+	opacity: 0.2;
+	z-index: 1
+
+	
+	
+	
+}
+
+div.character{
+	
+	font-size:30px;
+	float: left;
+	margin-top: 20px; 
+	margin-left: 40px; 
+	position: absolute;
+	z-index: 2;
+	
+}
+
+div.menu{
+	width: 20%;
+	height: 85%;
+	float: left;
+	text-align: left;
+	font-size: 10px;
+	background-image: url("../images/images/admin_02.jpg");
+	background-repeat: no-repeat;
+
+}
+
+div.menu_bottom{
+	
+	width: 265px;
+	height: 530px;
+	float: left;
+	
+	background-repeat: no-repeat;
+	
+	z-index: 2;
+	border-right: 7px groove;
+	 border-top: 7px groove; 
+	 
+	 border-left: : 7px groove; 
+	  
+	border-color: blue;
+	
+	
+}
+
+div.menu_container{
+
+	width: 200px;
+	height: 350px;
+	float: left;
+	
+	z-index: 3;
+	position: absolute;
+
+	
+}
+
+div.dtree{
+	
+	margin-top: 30px;
+	margin-left: 30px;
+	font-size: 15px;
+}
+
+div.display_iframe{
+	width: 80%;
+	height: 85%;
+	float: left;
+	background-repeat: no-repeat;
+	background-image: url("../images/images/admin_03.jpg");
+	 
+	
+
+}
+
+div.iframe_bottom{
+	
+	width: 1090px;
+	height: 80%;
+	
+	
+	
+	float: left;
+	z-index: 1;
+	position: absolute;
+	border-top : 7px groove blue;
+
+
+}
+
+div.iframe{
+	width: 80%;
+	height: 80%;
+	
+	float: left;
+	z-index: 2;
+	position: absolute;
+	margin-top: 10px;
+	
+}
+
+/*************************学生添加页面***/
+
+
+div.table_container{
+	margin-top: 120px;
+	margin-left: 450px;
+	float: left;
+	position: absolute;
+	z-index: 2;
+
+}
+
+div.table_bottom{
+	width: 800px;
+	height: 400px;
+	
+	float: left;
+	margin-left: 170px;
+	margin-top: 60px;
+	z-index: 1;
+	background-color: black;
+	background-repeat: no-repeat;
+	opacity: 0.4;
+	border-bottom: 7px groove white;
+	border-top: 7px groove white;
+	border-left: 7px groove white;
+	border-right: 7px groove white;
+
+}
+
+/********学生修改页面****/
+
+div.search{
+	width: 100%;
+	height: 15%;
+}
+
+div.update_container{
+	float: right;
+	margin-top: 10px;
+}
+
+div.display_all{
+	width: 100%;
+	height: 70%;
+	float: left;
+	z-index: 1;
+	border-top: 4px inset;
+
+}
+
+div.display_container{
+	
+	float: right;
+	margin-left: 300px;
+	z-index: 3;
+	position: absolute;
+	
+
+}
+
+div.display_table_bottom{
+	width: 70%;
+	height: 70%;
+	float: right;
+	margin-left: 150px;
+	z-index: 2;
+	position: absolute;
+	
+
+	background-color: black;
+	opacity: 0.2;
+}
+
+div.pagenum{
+	border-top: 4px inset;
+	width: 100%;
+	height: 16%;
+	float: left;
+	z-index: 1;
+	
+}
+
+div.page_container{
+
+	float: left;
+	margin-left: 700px;
+	z-index: 2;
+	position: absolute;
+
+}
+
+/*选课页面********************************/
+div.select_container{
+	height: 84%;
+	float: left;
+	
+	margin-left: 200px;	
+
+}
+
+div.select_bottom{
+	width: 700px;
+	height: 425px;
+	float: left;
+	z-index: 1;
+	position: absolute;
+	background-color: black;
+	opacity: 0.2;
+}
+
+div.select_table_container{
+	width: 700px;
+	height: 425px;
+	float: left;
+	z-index: 3;
+	position: absolute;
+	
+	
+}
+
+div.display_select{
+	width: 100%;
+	height: 86%;
+	float: left;
+	
+}
+
+div.display_select_bottom{
+	width: 70%;
+	height: 86%;
+	float: left;
+	margin-left: 200px;
+	z-index: 2;
+	position: absolute;
+	background-color: black;
+	opacity: 0.2;
+}
+
+div.display_select_container{
+	width: 70%;
+	height: 86%;
+	float: left;
+	margin-left: 220px;
+	z-index: 3;
+	position: absolute;
+	
+
+}

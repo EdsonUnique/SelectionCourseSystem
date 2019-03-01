@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping 
+	PUBLIC 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"	
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	<!--  实体的映射文件      把实体类的属性和表中的字段映射在一起 -->
+	<hibernate-mapping package="edson.bean"> 	
+		<class name="edson.bean.Admin" table="admin_tbl">		
+			<!-- 配置主键 -->		
+			<id name="admin_id" >			
+				<!-- 主键生成策略 -->			
+				<generator class="uuid"/>		
+			</id>		
+			<property name="admin_name"  />	
+			<property name="admin_gender"/>	
+			<property name="admin_pwd" />			
+		</class>
+	</hibernate-mapping>
+
+
+
